@@ -1,6 +1,11 @@
 import React, { createContext, useContext } from "react";
-import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
 import { eio, flicker, noise, rand } from "./anim";
+import { HEIGHT, WIDTH } from "./timeline";
+
+// Scenes are always drawn on a 1920x1080 canvas, even when a composition
+// (e.g. the 9:16 cut) shows them scaled inside a different frame size.
+const useCanvas = () => ({ width: WIDTH, height: HEIGHT });
 
 // ------------------------------------------------------------------ 2.5D camera
 
@@ -113,7 +118,7 @@ export const Screen: React.FC<{ tint: ScreenTint; level?: number; hotspot?: [num
 // Mango-leaf thoranam strung across the top, very close to the lens (dark, defocused).
 export const Thoranam: React.FC<{ y?: number; sway?: number }> = ({ y = -30, sway = 1 }) => {
   const frame = useCurrentFrame();
-  const { width } = useVideoConfig();
+  const { width } = useCanvas();
   const n = 22;
   return (
     <svg width={width + 400} height={320} style={{ position: "absolute", left: -200, top: y, overflow: "visible" }}>
@@ -175,7 +180,7 @@ export const Embers: React.FC<{ count?: number; seed?: number; color?: string; r
   from = 0,
 }) => {
   const frame = useCurrentFrame() - from;
-  const { width, height } = useVideoConfig();
+  const { width, height } = useCanvas();
   if (frame < 0) return null;
   return (
     <AbsoluteFill style={{ mixBlendMode: "screen", pointerEvents: "none" }}>
@@ -226,7 +231,7 @@ export const Flash: React.FC<{ at: number[]; color?: string; dur?: number; stren
 // Warm light leak sweeping across, local frames [start, start+dur]
 export const LightLeak: React.FC<{ start: number; dur?: number; hue?: string }> = ({ start, dur = 34, hue = "255,170,70" }) => {
   const frame = useCurrentFrame();
-  const { width } = useVideoConfig();
+  const { width } = useCanvas();
   const p = interpolate(frame, [start, start + dur], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: eio });
   if (p <= 0 || p >= 1) return null;
   const x = -0.4 * width + p * 1.8 * width;

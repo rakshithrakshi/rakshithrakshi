@@ -24,43 +24,42 @@ const duck = (frame: number, lines: typeof LINES) =>
     ),
   );
 
-export const Deepavali: React.FC = () => {
-  // Voice lines play only once their files exist in public/vo
+// The eight scenes back to back, drawn on a 1920x1080 canvas
+export const Scenes: React.FC = () => (
+  <Series>
+    <Series.Sequence name="Title" durationInFrames={SCENES.title}>
+      <S1Title />
+    </Series.Sequence>
+    <Series.Sequence name="Narakasura" durationInFrames={SCENES.demon}>
+      <S2Demon />
+    </Series.Sequence>
+    <Series.Sequence name="Darkness" durationInFrames={SCENES.darkness}>
+      <S3Darkness />
+    </Series.Sequence>
+    <Series.Sequence name="Call to Krishna" durationInFrames={SCENES.call}>
+      <S4Call />
+    </Series.Sequence>
+    <Series.Sequence name="Battle" durationInFrames={SCENES.battle}>
+      <S5Battle />
+    </Series.Sequence>
+    <Series.Sequence name="Last wish" durationInFrames={SCENES.wish}>
+      <S6Wish />
+    </Series.Sequence>
+    <Series.Sequence name="Light returns" durationInFrames={SCENES.light}>
+      <S7Light />
+    </Series.Sequence>
+    <Series.Sequence name="Message" durationInFrames={SCENES.message}>
+      <S8Message />
+    </Series.Sequence>
+  </Series>
+);
+
+// Music, SFX and every voice line present in public/vo, with the score ducked under speech
+export const Soundtrack: React.FC = () => {
   const present = new Set(getStaticFiles().map((f) => f.name));
   const voiced = LINES.filter((l) => present.has(voFile(l.n)));
   return (
-    <AbsoluteFill style={{ background: "#050201" }}>
-      <Series>
-        <Series.Sequence name="Title" durationInFrames={SCENES.title}>
-          <S1Title />
-        </Series.Sequence>
-        <Series.Sequence name="Narakasura" durationInFrames={SCENES.demon}>
-          <S2Demon />
-        </Series.Sequence>
-        <Series.Sequence name="Darkness" durationInFrames={SCENES.darkness}>
-          <S3Darkness />
-        </Series.Sequence>
-        <Series.Sequence name="Call to Krishna" durationInFrames={SCENES.call}>
-          <S4Call />
-        </Series.Sequence>
-        <Series.Sequence name="Battle" durationInFrames={SCENES.battle}>
-          <S5Battle />
-        </Series.Sequence>
-        <Series.Sequence name="Last wish" durationInFrames={SCENES.wish}>
-          <S6Wish />
-        </Series.Sequence>
-        <Series.Sequence name="Light returns" durationInFrames={SCENES.light}>
-          <S7Light />
-        </Series.Sequence>
-        <Series.Sequence name="Message" durationInFrames={SCENES.message}>
-          <S8Message />
-        </Series.Sequence>
-      </Series>
-
-      <Vignette />
-      <Grain />
-      <Subtitles />
-
+    <>
       <Audio name="Music" src={staticFile("audio/music.wav")} volume={(f) => duck(f, voiced)} />
       <Audio name="SFX" src={staticFile("audio/sfx.wav")} volume={(f) => 0.6 + 0.4 * duck(f, voiced)} />
       {voiced.map((l) => (
@@ -68,6 +67,16 @@ export const Deepavali: React.FC = () => {
           <Audio src={staticFile(voFile(l.n))} />
         </Sequence>
       ))}
-    </AbsoluteFill>
+    </>
   );
 };
+
+export const Deepavali: React.FC = () => (
+  <AbsoluteFill style={{ background: "#050201" }}>
+    <Scenes />
+    <Vignette />
+    <Grain />
+    <Subtitles />
+    <Soundtrack />
+  </AbsoluteFill>
+);

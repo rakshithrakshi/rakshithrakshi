@@ -1,6 +1,7 @@
 import { Composition, Folder } from "remotion";
 import "./fonts";
 import { Deepavali } from "./Deepavali";
+import { DeepavaliVertical } from "./vertical/Vertical";
 import { FPS, HEIGHT, SCENES, TOTAL, WIDTH } from "./timeline";
 import { S1Title } from "./scenes/S1Title";
 import { S2Demon } from "./scenes/S2Demon";
@@ -16,6 +17,7 @@ const base = { fps: FPS, width: WIDTH, height: HEIGHT };
 export const RemotionRoot: React.FC = () => (
   <>
     <Composition id="Deepavali" component={Deepavali} durationInFrames={TOTAL} {...base} />
+    <Composition id="DeepavaliVertical" component={DeepavaliVertical} durationInFrames={TOTAL} fps={FPS} width={1080} height={1920} />
     <Folder name="Scenes">
       <Composition id="Title" component={S1Title} durationInFrames={SCENES.title} {...base} />
       <Composition id="Narakasura" component={S2Demon} durationInFrames={SCENES.demon} {...base} />

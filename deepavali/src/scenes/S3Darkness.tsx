@@ -12,8 +12,10 @@ import { SCENES } from "../timeline";
 export const S3Darkness: React.FC = () => {
   const f = useCurrentFrame();
   const D = SCENES.darkness;
-  const beat = f < 100 ? 0 : f < 200 ? 1 : 2;
-  const local = f - beat * 100;
+  // Three equal beats; the timings below are written on a 0..100 scale per beat.
+  const BEAT = D / 3;
+  const beat = Math.min(2, Math.floor(f / BEAT));
+  const local = ((f - beat * BEAT) * 100) / BEAT;
   // lamp dips between beats, and drains overall
   const dip = Math.min(tw(local, 0, 12, 0, 1, eio), beat === 2 ? 1 : tw(local, 88, 100, 1, 0, eio));
   const drain = tw(f, 0, D, 1, 0.55, eio) * (beat === 2 ? tw(local, 50, 98, 1, 0.35, ein) : 1);

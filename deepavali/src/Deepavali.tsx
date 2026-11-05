@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, Sequence, Series, getStaticFiles, staticFile } from "remotion";
+import { AbsoluteFill, Sequence, Series, getStaticFiles, interpolate, staticFile } from "remotion";
 import { Audio } from "@remotion/media";
 import { LINES, SCENES } from "./timeline";
 import { Grain, Vignette } from "./stage";
@@ -15,9 +15,19 @@ import { S8Message } from "./scenes/S8Message";
 
 const voFile = (n: number) => `vo/${String(n).padStart(2, "0")}.mp3`;
 
+// Duck the score under the voice: ease down just before each line, back up after it
+const duck = (frame: number, lines: typeof LINES) =>
+  Math.min(
+    1,
+    ...lines.map((l) =>
+      interpolate(frame, [l.at - 10, l.at, l.to, l.to + 14], [1, 0.42, 0.42, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+    ),
+  );
+
 export const Deepavali: React.FC = () => {
   // Voice lines play only once their files exist in public/vo
   const present = new Set(getStaticFiles().map((f) => f.name));
+  const voiced = LINES.filter((l) => present.has(voFile(l.n)));
   return (
     <AbsoluteFill style={{ background: "#050201" }}>
       <Series>
@@ -51,9 +61,9 @@ export const Deepavali: React.FC = () => {
       <Grain />
       <Subtitles />
 
-      <Audio name="Music" src={staticFile("audio/music.wav")} />
-      <Audio name="SFX" src={staticFile("audio/sfx.wav")} />
-      {LINES.filter((l) => present.has(voFile(l.n))).map((l) => (
+      <Audio name="Music" src={staticFile("audio/music.wav")} volume={(f) => duck(f, voiced)} />
+      <Audio name="SFX" src={staticFile("audio/sfx.wav")} volume={(f) => 0.6 + 0.4 * duck(f, voiced)} />
+      {voiced.map((l) => (
         <Sequence key={l.n} name={`VO ${l.n} · ${l.who}`} from={l.at}>
           <Audio src={staticFile(voFile(l.n))} />
         </Sequence>

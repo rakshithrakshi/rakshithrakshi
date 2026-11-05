@@ -16,9 +16,9 @@ export const BATTLE = {
   arrowOut: 70,
   arrowHit: 92,
   raise: 115,
-  draw: 150,
-  release: 228,
-  impact: 250,
+  draw: 180,
+  release: 282, // just after "ಅಧರ್ಮಕ್ಕೆ… ಇಂದು ಅಂತ್ಯ!"
+  impact: 304,
 };
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -88,9 +88,9 @@ export const S5Battle: React.FC = () => {
   // Naraka falls
   const fall = tw(f, B.impact + 2, B.impact + 50, 0, 1, ein);
 
-  const cx = keys(f, [[0, 0], [100, 0], [150, 952], [226, 1143], [246, -637], [300, -560], [360, 0]]);
-  const cy = keys(f, [[0, 0], [100, 0], [150, -240], [226, -288], [246, 26], [300, 40], [360, 0]]);
-  const zoom = keys(f, [[0, 1], [100, 1.02], [150, 1.5], [226, 1.8], [246, 1.3], [300, 1.25], [360, 1.0]]);
+  const cx = keys(f, [[0, 0], [100, 0], [180, 952], [280, 1143], [300, -637], [360, -560], [485, 0]]);
+  const cy = keys(f, [[0, 0], [100, 0], [180, -240], [280, -288], [300, 26], [360, 40], [485, 0]]);
+  const zoom = keys(f, [[0, 1], [100, 1.02], [180, 1.5], [280, 1.8], [300, 1.3], [360, 1.25], [485, 1.0]]);
   const shake = Math.max(tw(f, B.arrowHit, B.arrowHit + 16, 0.8, 0), tw(f, B.impact, B.impact + 30, 1.6, 0), tw(f, B.chakraHit, B.chakraHit + 10, 0.4, 0));
 
   return (

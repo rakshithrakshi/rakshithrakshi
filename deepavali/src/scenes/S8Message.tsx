@@ -76,10 +76,10 @@ export const S8Message: React.FC = () => {
       </Layer>
 
       <Embers count={40} seed={41} color="255,210,130" rise={1.1} />
-      <LightLeak start={150} dur={44} />
+      <LightLeak start={190} dur={44} />
 
       <AbsoluteFill style={{ justifyContent: "flex-start", alignItems: "center", paddingTop: 70 }}>
-        <GoldTitle text="ತಮಸೋ ಮಾ ಜ್ಯೋತಿರ್ಗಮಯ" at={20} size={104} font={serif} weight={700} stagger={10} out={168} />
+        <GoldTitle text="ತಮಸೋ ಮಾ ಜ್ಯೋತಿರ್ಗಮಯ" at={20} size={104} font={serif} weight={700} stagger={10} out={205} />
         <div
           style={{
             marginTop: 4,
@@ -89,7 +89,7 @@ export const S8Message: React.FC = () => {
             color: "#ffe9c2",
             letterSpacing: "0.04em",
             textShadow: "0 0 16px rgba(255,160,60,0.8), 0 2px 4px rgba(0,0,0,0.7)",
-            opacity: tw(f, 70, 92, 0, 1, eio) * tw(f, 166, 180, 1, 0, eio),
+            opacity: tw(f, 70, 92, 0, 1, eio) * tw(f, 203, 216, 1, 0, eio),
             translate: `0 ${tw(f, 70, 96, 16, 0, eout)}px`,
           }}
         >
@@ -97,8 +97,8 @@ export const S8Message: React.FC = () => {
         </div>
       </AbsoluteFill>
       <AbsoluteFill style={{ justifyContent: "flex-start", alignItems: "center", paddingTop: 80 }}>
-        <GoldTitle text="ನಿಮ್ಮೆಲ್ಲರಿಗೂ ದೀಪಾವಳಿಯ" at={186} size={92} font={display} stagger={8} />
-        <GoldTitle text="ಹಾರ್ದಿಕ ಶುಭಾಶಯಗಳು" at={200} size={92} font={display} stagger={8} />
+        <GoldTitle text="ನಿಮ್ಮೆಲ್ಲರಿಗೂ ದೀಪಾವಳಿಯ" at={220} size={92} font={display} stagger={8} />
+        <GoldTitle text="ಹಾರ್ದಿಕ ಶುಭಾಶಯಗಳು" at={234} size={92} font={display} stagger={8} />
       </AbsoluteFill>
     </Stage>
   );

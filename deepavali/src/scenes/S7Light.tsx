@@ -10,7 +10,7 @@ import { SCENES } from "../timeline";
 
 // The child walks at a constant pace; each diya lights as the child's hand reaches it.
 // (scripts/make-audio.py derives the lighting ticks from these numbers.)
-export const LIGHT = { cut: 130, walkFrom: 140, walkTo: 280, x0: 380, x1: 1420, hand: 172 };
+export const LIGHT = { cut: 130, walkFrom: 140, walkTo: 320, x0: 380, x1: 1420, hand: 172 };
 
 const ROW = Array.from({ length: 9 }, (_, i) => ({ x: 560 + i * 100, y: 870 }));
 

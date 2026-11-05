@@ -17,13 +17,14 @@ from scipy.signal import butter, fftconvolve, lfilter, sosfilt
 
 SR = 48000
 FPS = 30
-DUR = 78.0
+DUR = 89.5
 N = int(SR * DUR)
 rng = np.random.default_rng(11)
 
 # scene starts (frames), from src/timeline.ts
-S = dict(title=0, demon=180, darkness=480, call=780, battle=1080, wish=1440, light=1740, message=2040)
-BATTLE = dict(chakraOut=20, chakraHit=58, arrowOut=70, arrowHit=92, raise_=115, draw=150, release=228, impact=250)
+S = dict(title=0, demon=180, darkness=520, call=890, battle=1190, wish=1675, light=1975, message=2340)
+DARK_BEAT = 370 / 3 / 100  # S3 beats run on a 0..100 scale, stretched to D/3 frames
+BATTLE = dict(chakraOut=20, chakraHit=58, arrowOut=70, arrowHit=92, raise_=115, draw=180, release=282, impact=304)
 
 
 def sec(frame):
@@ -455,15 +456,19 @@ place(sfx, crackle(9.5, 160, 4), sec(d0), 0.35)
 
 # Darkness: a whoosh into each beat, fleeing feet, the grab, chains
 z0 = S["darkness"]
+def dk(beat, local):  # darkness-scene frame for a beat-local time on the 0..100 scale
+    return z0 + (beat * 100 + local) * DARK_BEAT * 1.0
+
+
 for k in range(3):
-    place(sfx, whoosh(0.8), sec(z0 + k * 100) - 0.3, 0.6, pan=-0.4 + 0.4 * k)
-place(sfx, footsteps(3.0, 6.5), sec(z0 + 4), 0.8, pan=0.2)
-place(sfx, whoosh(1.2, 120, 1500), sec(z0 + 100), 0.8)
-place(sfx, thud(55, 0.9), sec(z0 + 140), 0.9)
-place(sfx, shimmer(1.6, 30, 3), sec(z0 + 110), 0.6)
+    place(sfx, whoosh(0.8), sec(dk(k, 0)) - 0.3, 0.6, pan=-0.4 + 0.4 * k)
+place(sfx, footsteps(3.6, 6.5), sec(dk(0, 4)), 0.8, pan=0.2)
+place(sfx, whoosh(1.2, 120, 1500), sec(dk(1, 0)), 0.8)
+place(sfx, thud(55, 0.9), sec(dk(1, 40)), 0.9)
+place(sfx, shimmer(1.6, 30, 3), sec(dk(1, 10)), 0.6)
 for k in range(9):
-    place(sfx, clink(1500 + (k % 3) * 400), sec(z0 + 206 + k * 9), 0.5, pan=-0.5 + (k % 5) * 0.25)
-place(sfx, whoosh(2.8, 1200, 120), sec(z0 + 220), 0.5)
+    place(sfx, clink(1500 + (k % 3) * 400), sec(dk(2, 6 + k * 9)), 0.5, pan=-0.5 + (k % 5) * 0.25)
+place(sfx, whoosh(2.8, 1200, 120), sec(dk(2, 20)), 0.5)
 
 # Call to Krishna: bell, footsteps, anklets, bow lift, Garuda takeoff
 c0 = S["call"]
@@ -510,9 +515,9 @@ place(sfx, shimmer(2.2, 70, 14), sec(l0 + 10), 0.8)
 for k in range(12):
     place(sfx, chirp(), sec(l0 + 40) + k * 0.31 + (k % 3) * 0.07, 0.5, pan=0.6 - (k % 4) * 0.3)
 place(sfx, whoosh(0.7, 300, 3000), sec(l0 + 130) - 0.3, 0.4)
-# each diya lights as the child's hand passes it (S7Light LIGHT: linear walk 380→1420 over frames 140→280, hand +172)
+# each diya lights as the child's hand passes it (S7Light LIGHT: linear walk 380→1420 over frames 140→320, hand +172)
 for k in range(9):
-    fr = 140 + (560 + 100 * k + 40 - 172 - 380) / 1040 * 140
+    fr = 140 + (560 + 100 * k + 40 - 172 - 380) / 1040 * 180
     place(sfx, glock(MOHANAM[k % 6], 3, 1.0), sec(l0 + fr), 0.35, pan=-0.6 + k * 0.15)
     place(sfx, match_strike()[: int(0.3 * SR)] * 0.25, sec(l0 + fr) - 0.05, 0.5, pan=-0.6 + k * 0.15)
 for k, fr in enumerate((160, 200, 240, 270)):
@@ -522,8 +527,8 @@ for k, fr in enumerate((160, 200, 240, 270)):
 m0 = S["message"]
 place(sfx, temple_bell(420), sec(m0), 0.8)
 place(sfx, shimmer(1.6, 40, 15), sec(m0 + 20), 0.8)
-place(sfx, shimmer(1.6, 40, 16), sec(m0 + 186), 0.9)
-place(sfx, temple_bell(560, 6.0), sec(m0 + 190), 0.8, pan=0.2)
+place(sfx, shimmer(1.6, 40, 16), sec(m0 + 220), 0.9)
+place(sfx, temple_bell(560, 6.0), sec(m0 + 224), 0.8, pan=0.2)
 
 sfx = reverb(sfx, 1.8, 0.22, seed=2)
 sfx *= np.clip((DUR - np.arange(N) / SR) / 2.0, 0, 1)[:, None]
